@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "parking-pricing"
+version = "2.0.0"
+description = "Real-time dynamic pricing for urban parking lots (Pathway + Bokeh/Panel)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Aniruddha Ray" }]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+]
+
+[project.optional-dependencies]
+# Pathway ships wheels for Linux and macOS only - use Docker/WSL/Colab on Windows.
+stream = ["pathway>=0.20; platform_system != 'Windows'"]
+dashboard = ["bokeh>=3.3", "panel>=1.3"]
+api = ["fastapi>=0.110", "uvicorn>=0.27"]
+dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.5", "nbclient>=0.10", "nbformat>=5.9", "ipykernel"]
+all = ["parking-pricing[stream,dashboard,api]"]
+
+[project.scripts]
+parking-pricing = "parking_pricing.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["parking_pricing*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
